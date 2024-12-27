@@ -64,8 +64,11 @@ const getBet = (balance, lines) =>{
     }
 }
 
+// 4. Spin the slot machine
 const spin = () => {
+
   const symbols = [];
+
   for (const [symbol, count] of Object.entries(SYMBOLS_COUNT)) {
     for (let i = 0; i < count; i++) {
       symbols.push(symbol)
@@ -73,9 +76,12 @@ const spin = () => {
   }
 
   const reels = [];
+
   for (let i = 0; i < COLS; i++) {
+    
     reels.push([])
     const reelSymbols = [...symbols]
+
     for (let j = 0; j < ROWS; j++) {
       const randomIndex = Math.floor(Math.random() * reelSymbols.length)
       const selectedSymbol = reelSymbols[randomIndex]
@@ -87,7 +93,9 @@ const spin = () => {
   return reels;
 };
 
+// 5. Check if the player won or lose
 const transpose = (reels) => {
+  
   const rows = []
 
   for (let i = 0; i < ROWS; i++) {
@@ -113,7 +121,9 @@ const printRows = (rows) => {
   }
 }
 
+// 6. If the player win, we give him/her the winnings if not we check if he/she has enough money to play again
 const getWinnings = (rows, bet, lines) => {
+  
   let winnings = 0
 
   for (let row = 0; row < lines; row++) {
@@ -137,36 +147,36 @@ const getWinnings = (rows, bet, lines) => {
 
 const game = () => {
 
-    let balance = deposit()
-    while (true) {
-        console.log("You deposit: ", balance, "$" )
+  let balance = deposit()
+  while (true) {
+    console.log("You deposit: " + balance + "$" )
 
-        const lines = getNumberOfLines()
-        console.log("You are betting on ", lines, " lines")
+    const lines = getNumberOfLines()
+    console.log("You are betting on " + lines + " lines")
 
-        const bet = getBet(balance, lines)
-        console.log("You are betting with", bet, "$ for ", lines, "lines." )
+    const bet = getBet(balance, lines)
+    console.log("You are betting with $" + bet + " for " + lines + "lines." )
 
-        balance -= bet * lines
+    balance -= bet * lines
 
-        const reels = spin()
+    const reels = spin()
 
-        const rows = transpose(reels)
+    const rows = transpose(reels)
 
-        printRows(rows)
+    printRows(rows)
         
-        const winnings = getWinnings(rows, bet, lines)
-        balance += winnings
-        console.log("You won, $" + winnings.toString())
+    const winnings = getWinnings(rows, bet, lines)
+    balance += winnings
+    console.log("You won, $" + winnings.toString())
 
-        if (balance <= 0) {
-        console.log("You ran out of money!")
-        break
-        }
+    if (balance <= 0) {
+      console.log("You ran out of money!")
+      break
+    }
 
-        const playAgain = prompt("Do you want to play again (y/n)? ")
-
-        if (playAgain != "y") break
+    // 7. play again 
+    const playAgain = prompt("Do you want to play again (y/n)? ")
+    if (playAgain != "y") break
     }
 
 }
